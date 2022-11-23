@@ -9,3 +9,34 @@ services:
       - 8000:8000
     env_file:
       - ./.env.dev
+    networks:
+      - web
+  postgres:
+    image: postgres
+    container_name: innotter_postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: admin
+      POSTGRES_DB: db_01
+      PGDATA: /home/postgres/data
+    networks:
+      - web
+    ports:
+      - "5433:5432"
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pdfmain.user@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: password123
+    ports:
+      - "5050:80"
+    networks:
+      - web
+    restart: unless-stopped
+
+
+networks:
+  web:
+    driver: bridge
