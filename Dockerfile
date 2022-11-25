@@ -1,14 +1,20 @@
-FROM python:3.10.8-alpine
+FROM python:3.10
 
-WORKDIR /app
+WORKDIR app/
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends build-essential libpq-dev
 
-RUN pip install 'poetry==1.2.2'
-COPY pyproject.toml .
-RUN poetry install --no-dev
+RUN apt install -y netcat
+# System deps:
+RUN pip install "poetry==1.2.2"
 
-COPY . app/
+# Copy only requirements to cache them in docker layer
+COPY poetry.lock pyproject.toml ./
 
+# Project initialization:
+RUN poetry config virtualenvs.create false \
+  && poetry install --no-interaction --no-ansi
+
+COPY entrypoint.sh .
 CMD [ "/app/entrypoint.sh" ]
