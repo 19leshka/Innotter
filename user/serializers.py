@@ -4,13 +4,6 @@ from django.contrib.auth import authenticate
 from .models import User
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'username', 'email', 'image_s3_path', 'role', 'title', 'is_blocked', 'password')
-        # fields = '__all__'
-
-
 class RegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         max_length=128,

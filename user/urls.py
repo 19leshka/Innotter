@@ -1,5 +1,5 @@
 from rest_framework import routers
-from .api import UserViewSet, RegistrationAPIView
+from .api import RegistrationAPIView
 
 # router = routers.DefaultRouter()
 # router.register('user/', RegistrationAPIView.as_view(), 'user-registration')

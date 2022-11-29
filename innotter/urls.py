@@ -5,7 +5,6 @@ from user.api import LoginAPIView, RegistrationAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('', include('user.urls')),
     path('api/user/', RegistrationAPIView.as_view()),
     path('api/user/login/', LoginAPIView.as_view()),
 ]

@@ -2,16 +2,8 @@ from .models import User
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import UserSerializer, RegistrationSerializer, LoginSerializer
+from .serializers import RegistrationSerializer, LoginSerializer
 from .renderers import UserJSONRenderer
-
-
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    permission_classes = [
-        permissions.AllowAny
-    ]
-    serializer_class = UserSerializer
 
 
 class RegistrationAPIView(APIView):
