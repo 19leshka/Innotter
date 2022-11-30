@@ -7,7 +7,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, username, email, password=None):
+    def create_user(self, username: str, email: str, password: str = None) -> 'User':
         print(username)
         if username is None:
             raise TypeError('Users must have a username.')
@@ -21,7 +21,7 @@ class UserManager(BaseUserManager):
 
         return user
 
-    def create_superuser(self, username, email, password):
+    def create_superuser(self, username: str, email: str, password: str) -> 'User':
         if password is None:
             raise TypeError('Superusers must have a password.')
 
@@ -55,13 +55,13 @@ class User(AbstractUser):
         return self.email
 
     @property
-    def token(self):
+    def token(self) -> str:
         return self._generate_jwt_token()
 
-    def get_full_name(self):
+    def get_full_name(self) -> str:
         return self.username
 
-    def _generate_jwt_token(self):
+    def _generate_jwt_token(self) -> str:
         dt = datetime.now() + timedelta(days=1)
 
         token = jwt.encode({
@@ -70,4 +70,3 @@ class User(AbstractUser):
         }, settings.SECRET_KEY, algorithm='HS256')
 
         return token
-        # return jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])

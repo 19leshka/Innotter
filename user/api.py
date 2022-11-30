@@ -1,17 +1,16 @@
-from .models import User
+from django.http import HttpRequest, HttpResponse
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from .serializers import RegistrationSerializer, LoginSerializer
 from .renderers import UserJSONRenderer
 
 
-class RegistrationAPIView(APIView):
+class RegistrationAPIView(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
     serializer_class = RegistrationSerializer
     renderer_classes = (UserJSONRenderer,)
 
-    def post(self, request):
+    def create(self, request: HttpRequest) -> HttpResponse:
         user = request.data.get('user', {})
 
         serializer = self.serializer_class(data=user)
@@ -21,12 +20,12 @@ class RegistrationAPIView(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class LoginAPIView(APIView):
+class LoginAPIView(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
     renderer_classes = (UserJSONRenderer,)
     serializer_class = LoginSerializer
 
-    def post(self, request):
+    def create(self, request: HttpRequest) -> HttpResponse:
         user = request.data.get('user', {})
 
         serializer = self.serializer_class(data=user)
