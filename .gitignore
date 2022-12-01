@@ -89,3 +89,4 @@ local_settings.py
 .env
 db.sqlite3
 db_01
+innotter/__pycache__
