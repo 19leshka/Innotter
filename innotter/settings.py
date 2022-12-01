@@ -15,6 +15,7 @@ env_path = Path('.')/'.env'
 load_dotenv(dotenv_path=env_path)
 
 SECRET_KEY = os.getenv("SECRET_KEY")
+REFRESH_TOKEN_SECRET = os.getenv("REFRESH_TOKEN_SECRET")
 DEBUG = int(os.getenv("DEBUG", default=0))
 
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS").split(" ")
@@ -107,7 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Europe/Minsk'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -129,7 +130,10 @@ AUTH_USER_MODEL = "user.User"
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'user.exceptions.core_exception_handler',
     'NON_FIELD_ERRORS_KEY': 'error',
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'user.backends.JWTAuthentication',
+        'user.authentication.SafeJWTAuthentication',
     ),
 }

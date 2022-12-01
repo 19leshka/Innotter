@@ -1,7 +1,8 @@
+from django.http import HttpResponse
 from rest_framework.views import exception_handler
 
 
-def core_exception_handler(exc, context):
+def core_exception_handler(exc: Exception, context) -> HttpResponse | Exception:
     response = exception_handler(exc, context)
     handlers = {
         'ValidationError': _handle_generic_error
@@ -14,7 +15,7 @@ def core_exception_handler(exc, context):
     return response
 
 
-def _handle_generic_error(exc, context, response):
+def _handle_generic_error(exc, context, response: HttpResponse) -> HttpResponse:
     response.data = {
         'errors': response.data
     }

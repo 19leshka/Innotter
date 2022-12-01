@@ -24,7 +24,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
             return None
 
         prefix = auth_header[0].decode('utf-8')
-        token = auth_header[1]
+        token = auth_header[1].decode('utf-8')
 
         if prefix.lower() != auth_header_prefix:
             return None
@@ -33,7 +33,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
     def _authenticate_credentials(self, request, token):
         try:
-            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+            payload = jwt.decode(token, settings.SECRET_KEY)
         except Exception:
             msg = 'Authentication failed. Unable to decode token'
             raise exceptions.AuthenticationFailed(msg)

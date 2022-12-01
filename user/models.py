@@ -1,14 +1,9 @@
-import jwt
-
-from datetime import datetime, timedelta
-from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, username, email, password=None):
-        print(username)
+    def create_user(self, username: str, email: str, password: str = None) -> 'User':
         if username is None:
             raise TypeError('Users must have a username.')
 
@@ -21,7 +16,7 @@ class UserManager(BaseUserManager):
 
         return user
 
-    def create_superuser(self, username, email, password):
+    def create_superuser(self, username: str, email: str, password: str) -> 'User':
         if password is None:
             raise TypeError('Superusers must have a password.')
 
@@ -53,21 +48,3 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
-
-    @property
-    def token(self):
-        return self._generate_jwt_token()
-
-    def get_full_name(self):
-        return self.username
-
-    def _generate_jwt_token(self):
-        dt = datetime.now() + timedelta(days=1)
-
-        token = jwt.encode({
-            'id': self.pk,
-            'exp': int(dt.strftime('%s'))
-        }, settings.SECRET_KEY, algorithm='HS256')
-
-        return token
-        # return jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
