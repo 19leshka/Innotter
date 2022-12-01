@@ -114,10 +114,18 @@ category = "main"
 optional = false
 python-versions = ">=2"
 
+[[package]]
+name = "uuid"
+version = "1.30"
+description = "UUID object and generation functions (Python 2.3 or higher)"
+category = "main"
+optional = false
+python-versions = "*"
+
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "5de66720a2604673c1da30915d3ef7d9bb48635785846a0407d5cef9107bdb0d"
+content-hash = "fa8aff68dde93633ea2c3e9248725a3fc449a26943c5f009da3b06b8209c6ccb"
 
 [metadata.files]
 asgiref = [
@@ -243,4 +251,7 @@ sqlparse = [
 tzdata = [
     {file = "tzdata-2022.6-py2.py3-none-any.whl", hash = "sha256:04a680bdc5b15750c39c12a448885a51134a27ec9af83667663f0b3a1bf3f342"},
     {file = "tzdata-2022.6.tar.gz", hash = "sha256:91f11db4503385928c15598c98573e3af07e7229181bee5375bd30f1695ddcae"},
+]
+uuid = [
+    {file = "uuid-1.30.tar.gz", hash = "sha256:1f87cc004ac5120466f36c5beae48b4c48cc411968eed0eaecd3da82aa96193f"},
 ]
