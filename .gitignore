@@ -80,6 +80,7 @@ target/
 *.log
 *.pot
 *.pyc
+**/__pycache__
 __pycache__/
 innotter/__pycache__/
 innotter/__pycache__
