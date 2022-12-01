@@ -1,6 +1,7 @@
 from django.http import HttpRequest, HttpResponse
 from rest_framework import status
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.decorators import action
+from rest_framework.viewsets import ModelViewSet, ViewSet
 
 from .serializers import RegistrationSerializer
 from django.contrib.auth import get_user_model
@@ -9,34 +10,34 @@ from rest_framework import exceptions
 from rest_framework.permissions import AllowAny
 from user.serializers import UserSerializer
 from user.utils import generate_access_token, generate_refresh_token
-
-class RegistrationAPIView(ModelViewSet):
-    permission_classes = (AllowAny,)
-    serializer_class = RegistrationSerializer
-
-    def create(self, request: HttpRequest) -> HttpResponse:
-        user = request.data.get('user', {})
-
-        serializer = self.serializer_class(data=user)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+from .models import User
 
 
 class UserView(ModelViewSet):
     permission_classes = (AllowAny,)
-    def list(self, request: HttpRequest) -> HttpResponse:
+
+    @action(detail=False)
+    def profile(self, request: HttpRequest) -> HttpResponse:
         user = request.user
         serialized_user = UserSerializer(user).data
         return Response({'user': serialized_user})
 
 
-class LoginAPIView(ModelViewSet):
+class AuthAPIView(ModelViewSet):
     permission_classes = (AllowAny,)
 
-    def create(self, request: HttpRequest) -> HttpResponse:
-        User = get_user_model()
+    @action(detail=False, methods=['post'])
+    def register(self, request: HttpRequest) -> HttpResponse:
+        user = request.data.get('user', {})
+
+        serializer = RegistrationSerializer(data=user)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    @action(detail=False, methods=['post'])
+    def login(self, request: HttpRequest) -> HttpResponse:
         email = request.data.get('email')
         password = request.data.get('password')
         response = Response()
