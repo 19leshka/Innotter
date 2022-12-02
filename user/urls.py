@@ -1,5 +1,5 @@
 from rest_framework import routers
-from .api import AuthAPIView, UserView
+from user.api import AuthAPIView, UserView
 
 router = routers.DefaultRouter()
 router.register('user', UserView, 'user')

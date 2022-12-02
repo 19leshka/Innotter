@@ -2,35 +2,43 @@ from django.http import HttpRequest, HttpResponse
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.viewsets import ModelViewSet, ViewSet
-
 from .serializers import RegistrationSerializer
-from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 from rest_framework import exceptions
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from user.serializers import UserSerializer
 from user.utils import generate_access_token, generate_refresh_token
-from .models import User
+from user.models import User
 
 
 class UserView(ModelViewSet):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
 
     @action(detail=False)
     def profile(self, request: HttpRequest) -> HttpResponse:
         user = request.user
         serialized_user = UserSerializer(user).data
-        return Response({'user': serialized_user})
+        return Response(serialized_user)
 
 
-class AuthAPIView(ModelViewSet):
+class AuthAPIView(ViewSet):
     permission_classes = (AllowAny,)
+    serializer_action_classes = {
+        'register': RegistrationSerializer,
+        'login': UserSerializer
+    }
+
+    def get_serializer_class(self):
+        try:
+            return self.serializer_action_classes[self.action]
+        except (KeyError, AttributeError):
+            return super().get_serializer_class()
 
     @action(detail=False, methods=['post'])
     def register(self, request: HttpRequest) -> HttpResponse:
         user = request.data.get('user', {})
-
-        serializer = RegistrationSerializer(data=user)
+        serializer = self.get_serializer_class()
+        serializer = serializer(data=user)
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
@@ -51,7 +59,8 @@ class AuthAPIView(ModelViewSet):
         if not user.check_password(password):
             raise exceptions.AuthenticationFailed('wrong password')
 
-        serialized_user = UserSerializer(user).data
+        serializer = self.get_serializer_class()
+        serialized_user = serializer(user).data
 
         access_token = generate_access_token(user)
         refresh_token = generate_refresh_token(user)
