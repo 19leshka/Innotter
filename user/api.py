@@ -1,9 +1,6 @@
 from django.http import HttpRequest, HttpResponse
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.viewsets import ModelViewSet
-
-from .renderers import UserJSONRenderer
 from rest_framework.viewsets import ModelViewSet, ViewSet
 from .serializers import RegistrationSerializer
 from rest_framework.response import Response
@@ -18,8 +15,7 @@ class UserView(ModelViewSet):
     queryset = User.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
-
-
+    
     @action(detail=False)
     def profile(self, request: HttpRequest) -> HttpResponse:
         user = request.user
@@ -28,7 +24,7 @@ class UserView(ModelViewSet):
 
     @action(detail=False, methods=['patch'])
     def update_profile(self, request: HttpRequest) -> HttpResponse:
-        serializer_data = request.data.get('user', {})
+        serializer_data = request.data
         serializer = self.serializer_class(
             request.user, data=serializer_data, partial=True
         )

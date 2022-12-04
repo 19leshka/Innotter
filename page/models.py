@@ -6,7 +6,7 @@ from user.models import User
 
 class Page(models.Model):
     name = models.CharField(max_length=80)
-    uuid = models.UUIDField(max_length=30, unique=True, default=uuid.uuid4)
+    uuid = models.CharField(max_length=36, unique=True, default=uuid.uuid4)
     description = models.TextField()
     tags = models.ManyToManyField(Tag, related_name='pages', blank=True)
 
@@ -16,10 +16,10 @@ class Page(models.Model):
     image = models.URLField(null=True, blank=True)
 
     is_private = models.BooleanField(default=False)
-    follow_requests = models.ManyToManyField(User, related_name='requests')
-
+    follow_requests = models.ManyToManyField(User, related_name='requests', blank=True)
+    is_blocked = models.BooleanField(default=False)
     unblock_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return self.title
+        return self.name
 
