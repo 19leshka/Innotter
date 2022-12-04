@@ -15,16 +15,18 @@ from user.models import User
 
 
 class UserView(ModelViewSet):
+    queryset = User.objects.all()
     permission_classes = (IsAuthenticated,)
-    renderer_classes = (UserJSONRenderer,)
+    serializer_class = UserSerializer
+
 
     @action(detail=False)
     def profile(self, request: HttpRequest) -> HttpResponse:
         user = request.user
-        serialized_user = UserSerializer(user).data
+        serialized_user = self.serializer_class(user).data
         return Response(serialized_user)
 
-    @action(detail=False, methods=['patch'], serializer_class=UserSerializer)
+    @action(detail=False, methods=['patch'])
     def update_profile(self, request: HttpRequest) -> HttpResponse:
         serializer_data = request.data.get('user', {})
         serializer = self.serializer_class(
