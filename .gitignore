@@ -81,8 +81,12 @@ target/
 *.pot
 *.pyc
 __pycache__/
+innotter/__pycache__/
+innotter/__pycache__/urls.cpython-310.pyc
+innotter/__pycache__/settings.cpython-310.pyc
 local_settings.py
 
 .env
 db.sqlite3
 db_01
+innotter/__pycache__
