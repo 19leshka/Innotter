@@ -37,7 +37,16 @@ class PagesView(ModelViewSet):
         self.perform_create(serializer)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+    def update(self, request, *args, **kwargs):
+        tags_id = TagService.process_tags(request)
+        data = {**request.data, 'tags': tags_id, 'owner': self.request.user.id}
+        serializer = self.get_serializer_class()
+        serializer = serializer(instance=self.get_object(), data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     @action(url_path='follow', permission_classes=[IsAuthenticated], detail=True)
-    def follow(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def follow(self, request: HttpRequest) -> HttpResponse:
         message = PageService.follow_unfollow_switch(self.get_object(), request)
         return Response(data=message, status=status.HTTP_201_CREATED)
