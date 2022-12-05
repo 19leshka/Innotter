@@ -15,7 +15,7 @@ class UserView(ModelViewSet):
     queryset = User.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
-    
+
     @action(detail=False)
     def profile(self, request: HttpRequest) -> HttpResponse:
         user = request.user

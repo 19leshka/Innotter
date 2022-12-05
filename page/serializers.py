@@ -35,4 +35,10 @@ class UpdatePageSerializer(serializers.ModelSerializer):
         model = Page
         fields = ('id', 'uuid', 'name', 'tags', 'image', 'owner', 'description', 'is_private')
 
+    def update(self, instance, validated_data):
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
 
+        instance.save()
+
+        return instance
