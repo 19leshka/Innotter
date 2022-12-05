@@ -15,7 +15,12 @@
     <h4>Page</h4>
     <li> (POST) /api/auth/page/ - create page</li>
     <li> (PATCH) /api/auth/page/<:pk>/ - update page</li>
-    <li> (get) /api/auth/page/<:pk>/follow/ - follow/unfollow/ page switch</li>
-    <li> (get) /api/auth/page/my_pages/ - your own pages</li>
+    <li> (GET) /api/auth/page/<:pk>/follow/ - follow/unfollow/ page switch</li>
+    <li> (GET) /api/auth/page/my_pages/ - your own pages</li>
+    <li> (PATCH) /api/auth/page/<:pk>/approve_requests/ - approve follow requests
+    <p>{
+    "follow_requests": [user_id]
+    }</p>
+</li>
     
 </ul>

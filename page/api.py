@@ -30,7 +30,7 @@ class PagesView(ModelViewSet):
         except (KeyError, AttributeError):
             return super().get_serializer_class()
 
-    def create(self, request, *args, **kwargs):
+    def create(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         tags_id = TagService.process_tags(request)
         data = {**request.data, 'tags': tags_id, 'owner': self.request.user.id}
         serializer = self.get_serializer_class()
@@ -39,7 +39,7 @@ class PagesView(ModelViewSet):
         self.perform_create(serializer)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def update(self, request, *args, **kwargs):
+    def update(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         tags_id = TagService.process_tags(request)
         data = {**request.data, 'tags': tags_id, 'owner': self.request.user.id}
         serializer = self.get_serializer_class()
@@ -61,11 +61,10 @@ class PagesView(ModelViewSet):
         serializer = serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    #after
-    # @action(methods=['PATCH'], url_path='approve-requests', permission_classes=[IsPageOwner],
-    #         detail=True)
-    # def approve_requests(self, request, *args, **kwargs):
-    #     serializer = ApproveRequestsSerializer(self.get_object(), request.data, partial=True)
-    #     serializer.is_valid(raise_exception=True)
-    #     serializer.save()
-    #     return Response(serializer.data, status=status.HTTP_200_OK)
+    @action(methods=['PATCH'], permission_classes=[IsPageOwner],
+            detail=True)
+    def approve_requests(self, request: HttpRequest) -> HttpResponse:
+        serializer = ApproveRequestsSerializer(self.get_object(), request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
