@@ -15,6 +15,7 @@
     <h4>Page</h4>
     <li> (POST) /api/auth/page/ - create page</li>
     <li> (PATCH) /api/auth/page/<:pk>/ - update page</li>
-    <li> (get) /api/auth/page/<:pk>/follow - follow/unfollow page switch</li>
+    <li> (get) /api/auth/page/<:pk>/follow/ - follow/unfollow/ page switch</li>
+    <li> (get) /api/auth/page/my_pages/ - your own pages</li>
     
 </ul>
