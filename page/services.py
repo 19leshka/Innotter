@@ -5,7 +5,8 @@ from page.models import Page
 
 class PageService:
     @staticmethod
-    def follow_unfollow_switch(page: Page, request: HttpRequest) -> dict:
+    def follow_unfollow_switch(pk: int, request: HttpRequest) -> dict:
+        page = Page.objects.get(pk=pk)
         if request.user not in page.followers.all():
             if page.is_private:
                 page.follow_requests.add(request.user)

@@ -47,6 +47,6 @@ class PagesView(ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(url_path='follow', permission_classes=[IsAuthenticated], detail=True)
-    def follow(self, request: HttpRequest) -> HttpResponse:
-        message = PageService.follow_unfollow_switch(self.get_object(), request)
+    def follow(self, request: HttpRequest, pk=None) -> HttpResponse:
+        message = PageService.follow_unfollow_switch(pk, request)
         return Response(data=message, status=status.HTTP_201_CREATED)
