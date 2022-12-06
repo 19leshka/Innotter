@@ -1,21 +1,18 @@
 from django.http import HttpRequest
-
-from .models import Tag
+from tag.models import Tag
 
 
 class TagService:
     @staticmethod
     def process_tags(request: HttpRequest) -> list:
         tags_id = []
-        if 'tags' in request.data:
-            tags = request.data.pop('tags')
+        if tags := request.data.pop('tags', None):
             existing_tags = Tag.objects.filter(name__in=tags)
             for tag in existing_tags:
                 tags_id.append(tag.id)
                 tags.remove(tag.name)
-            for tag in tags:
-                new_tag = Tag.objects.create(name=tag)
-                new_tag.save()
-                tags_id.append(new_tag.id)
-
+            bulk_list = list()
+            [bulk_list.append(Tag(name=tag)) for tag in tags]
+            bulk_msj = Tag.objects.bulk_create(bulk_list)
+            [tags_id.append(new_tag.id) for new_tag in bulk_msj]
         return tags_id
