@@ -3,6 +3,6 @@ from rest_framework import routers
 from .api import PostView
 
 router = routers.DefaultRouter()
-router.register('post', PostView, 'posts')
+router.register('posts', PostView, 'posts')
 
 urlpatterns = router.urls

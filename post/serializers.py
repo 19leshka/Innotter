@@ -7,8 +7,7 @@ from user.serializers import UserSerializer
 
 
 class PostSerializer(serializers.ModelSerializer):
-    # page = PageSerializer(read_only=True)
-    owner = UserSerializer(read_only=True)
+    page = PageSerializer()
 
     class Meta:
         model = Post
