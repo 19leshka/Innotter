@@ -8,6 +8,7 @@ from rest_framework.viewsets import ModelViewSet
 from post.models import Post
 from post.serializers import PostSerializer, CreatePostSerializer, UpdatePostSerializer
 from post.services import PostServices
+from user.models import User
 
 
 class PostView(ModelViewSet):
@@ -56,3 +57,16 @@ class PostView(ModelViewSet):
     def like(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         msg = PostServices.like_unlike_switch(self.get_object(), request)
         return Response(data=msg, status=status.HTTP_201_CREATED)
+
+
+    @action(permission_classes=[IsAuthenticated], url_path='all-liked-posts', detail=False)
+    def all_liked_posts(self, request: HttpRequest) -> HttpResponse:
+        posts = User.objects.get(pk=request.user.id).liked_by_post.all()
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(permission_classes=[IsAuthenticated], url_path='page-liked-posts', detail=True)
+    def page_liked_posts(self, request: HttpRequest, pk: int) -> HttpResponse:
+        posts = User.objects.get(pk=request.user.id).liked_by_post.filter(page=pk)
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
