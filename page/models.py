@@ -1,4 +1,4 @@
-import uuid as uuid
+import uuid
 from django.db import models
 from tag.models import Tag
 from user.models import User
@@ -22,4 +22,3 @@ class Page(models.Model):
 
     def __str__(self):
         return self.name
-

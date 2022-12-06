@@ -1,5 +1,4 @@
 from django.http import HttpRequest
-
 from page.models import Page
 
 
