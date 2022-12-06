@@ -1,14 +1,19 @@
-from page import serializers
+from rest_framework import serializers
+
+from page.models import Page
 from page.serializers import PageSerializer
 from post.models import Post
+from user.serializers import UserSerializer
 
 
 class PostSerializer(serializers.ModelSerializer):
-    page = PageSerializer()
+    # page = PageSerializer(read_only=True)
+    owner = UserSerializer(read_only=True)
 
     class Meta:
         model = Post
-        fields = ('id', 'page', 'created_at', 'updated_at', 'reply_to', 'liked_by')
+        fields = ('id', 'page', 'owner', 'created_at', 'updated_at', 'reply_to', 'liked_by')
+        read_only_fields = ('created_at', 'updated_at', 'reply_to')
 
 
 class CreatePostSerializer(serializers.ModelSerializer):
@@ -20,8 +25,9 @@ class CreatePostSerializer(serializers.ModelSerializer):
 
 
 class UpdatePostSerializer(serializers.ModelSerializer):
-    page = PageSerializer()
 
     class Meta:
         model = Post
         fields = ('id', 'page', 'content', 'owner', 'reply_to')
+
+
