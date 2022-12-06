@@ -21,7 +21,7 @@ class PagesView(ModelViewSet):
     serializer_action_classes = {
         'create': CreatePageSerializer,
         'update': UpdatePageSerializer,
-        'my_pages': PageOwnerSerializer
+        'my-pages': PageOwnerSerializer
     }
 
     def get_serializer_class(self):
@@ -53,7 +53,7 @@ class PagesView(ModelViewSet):
         message = PageService.follow_unfollow_switch(pk, request)
         return Response(data=message, status=status.HTTP_201_CREATED)
 
-    @action(permission_classes=[IsAuthenticated], detail=False)
+    @action(permission_classes=[IsAuthenticated], url_path='my-pages', detail=False)
     def my_pages(self, request: HttpRequest) -> HttpResponse:
         user = request.user
         queryset = Page.objects.filter(owner=user)
@@ -61,7 +61,7 @@ class PagesView(ModelViewSet):
         serializer = serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @action(methods=['PATCH'], url_path='approve_requests', permission_classes=[IsPageOwner],
+    @action(methods=['PATCH'], url_path='approve-requests', permission_classes=[IsPageOwner],
             detail=True)
     def approve_requests(self, request: HttpRequest, pk: int) -> HttpResponse:
         serializer = ApproveRequestsSerializer(self.get_object(), request.data, partial=True)
@@ -69,9 +69,9 @@ class PagesView(ModelViewSet):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @action(methods=['PATCH'], url_path='reject_requests', permission_classes=[IsPageOwner],
+    @action(methods=['PATCH'], url_path='reject-requests', permission_classes=[IsPageOwner],
             detail=True)
-    def decline_requests(self, request: HttpRequest, pk: int) -> HttpResponse:
+    def reject_requests(self, request: HttpRequest, pk: int) -> HttpResponse:
         serializer = RejectRequestsSerializer(self.get_object(), request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()

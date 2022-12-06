@@ -22,7 +22,7 @@ class UserView(ModelViewSet):
         serialized_user = self.serializer_class(user).data
         return Response(serialized_user)
 
-    @action(detail=False, methods=['patch'])
+    @action(detail=False, url_path='update-profile', methods=['patch'])
     def update_profile(self, request: HttpRequest) -> HttpResponse:
         serializer_data = request.data
         serializer = self.serializer_class(
