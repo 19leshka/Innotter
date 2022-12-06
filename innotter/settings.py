@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
     'page.apps.PageConfig',
     'post.apps.PostConfig',
+    'tag.apps.TagConfig',
 ]
 
 MIDDLEWARE = [
