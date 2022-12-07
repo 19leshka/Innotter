@@ -6,7 +6,14 @@ from user.serializers import UserSerializer
 from .models import Page
 
 
-class PageSerializer(serializers.ModelSerializer):
+class BlockPageSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        if not ret['is_blocked']:
+            return ret
+
+
+class PageSerializer(BlockPageSerializer, serializers.ModelSerializer):
     tags = TagSerializer(many=True, read_only=True)
     owner = UserSerializer(read_only=True)
     followers = UserSerializer(read_only=True, many=True)
@@ -14,7 +21,7 @@ class PageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Page
         fields = (
-            'id', 'uuid', 'name', 'tags', 'image', 'description', 'owner', 'followers', 'is_private',)
+            'id', 'uuid', 'name', 'tags', 'image', 'description', 'owner', 'followers', 'is_private', 'is_blocked')
         read_only_fields = ('followers',)
 
 
