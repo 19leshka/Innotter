@@ -11,6 +11,7 @@
     <li>(GET) <code>/api/user/</code> - all profiles</li>
     <li>(GET) <code>/api/user/<:pk>/</code> - user profile</li>
     <li>(PATCH) <code>/api/user/update-profile/</code> - update profile</li>
+    <li>(GET) <code>/api/user/<:pk>/block/</code> - block/unblock switch (only by admin)</li>
     <hr>
     <h4>Page</h4>
     <li> (POST) <code>/api/pages/</code> - create page</li>
