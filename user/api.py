@@ -37,7 +37,7 @@ class UserView(ModelViewSet):
 
     @action(detail=True, methods=['POST'], permission_classes=[IsAdmin])
     def block(self, request: HttpRequest, pk: int) -> HttpResponse:
-        data = UserService.block_unblock(pk)
+        data = UserService.block_unblock_switch(pk)
         return Response(data, status=status.HTTP_200_OK)
 
 
