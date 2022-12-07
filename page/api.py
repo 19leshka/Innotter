@@ -11,6 +11,7 @@ from tag.services import TagService
 from page.models import Page
 from page.serializers import PageSerializer, CreatePageSerializer, UpdatePageSerializer, ApproveRequestsSerializer, \
     PageOwnerSerializer, RejectRequestsSerializer
+from user.permissioms import IsAdminOrModerator
 
 
 class PagesView(ModelViewSet):
@@ -76,3 +77,8 @@ class PagesView(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=True,methods=['POST'], permission_classes=[IsAdminOrModerator])
+    def block(self, request: HttpRequest, pk: int) -> HttpResponse:
+        data = PageService.block_unblock(pk)
+        return Response(data, status=status.HTTP_200_OK)

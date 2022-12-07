@@ -17,3 +17,15 @@ class PageService:
             page.followers.remove(request.user)
             message = {'status': 'You unfollow this page'}
         return message
+
+    @staticmethod
+    def block_unblock_switch(user_id: int):
+        page = Page.objects.get(pk=user_id)
+        if page.is_blocked:
+            page.is_blocked = False
+            message = {'status': 'Page is unblocked'}
+        else:
+            page.is_blocked = True
+            message = {'status': 'Page is blocked'}
+        page.save()
+        return message
