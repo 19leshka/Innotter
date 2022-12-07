@@ -60,12 +60,12 @@ class PostView(ModelViewSet):
 
     @action(permission_classes=[IsAuthenticated], url_path='all-liked-posts', detail=False)
     def all_liked_posts(self, request: HttpRequest) -> HttpResponse:
-        posts = User.objects.get(pk=request.user.id).liked_by_post.all()
+        posts = request.user.liked_by_post.all()
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(permission_classes=[IsAuthenticated], url_path='page-liked-posts', detail=True)
     def page_liked_posts(self, request: HttpRequest, pk: int) -> HttpResponse:
-        posts = User.objects.get(pk=request.user.id).liked_by_post.filter(page=pk)
+        posts = request.user.liked_by_post.filter(page=pk)
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
