@@ -35,7 +35,7 @@ class UserView(ModelViewSet):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @action(detail=True, permission_classes=[IsAdmin])
+    @action(detail=True, methods=['POST'], permission_classes=[IsAdmin])
     def block(self, request: HttpRequest, pk: int) -> HttpResponse:
         data = UserService.block_unblock(pk)
         return Response(data, status=status.HTTP_200_OK)
