@@ -18,9 +18,10 @@ class UserView(ModelViewSet):
 
     @action(detail=False)
     def profile(self, request: HttpRequest) -> HttpResponse:
+        role = request.user.is_staff
         user = request.user
         serialized_user = self.serializer_class(user).data
-        return Response(serialized_user)
+        return Response(role)
 
     @action(detail=False, url_path='update-profile', methods=['patch'])
     def update_profile(self, request: HttpRequest) -> HttpResponse:
