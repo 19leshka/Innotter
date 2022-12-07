@@ -58,7 +58,6 @@ class PostView(ModelViewSet):
         msg = PostServices.like_unlike_switch(self.get_object(), request)
         return Response(data=msg, status=status.HTTP_201_CREATED)
 
-
     @action(permission_classes=[IsAuthenticated], url_path='all-liked-posts', detail=False)
     def all_liked_posts(self, request: HttpRequest) -> HttpResponse:
         posts = User.objects.get(pk=request.user.id).liked_by_post.all()

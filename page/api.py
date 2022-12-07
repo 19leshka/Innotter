@@ -7,13 +7,10 @@ from rest_framework.viewsets import ModelViewSet
 
 from page.permissions import PageAccessPermission, IsPageOwner
 from page.services import PageService
-from post.serializers import PostSerializer
 from tag.services import TagService
 from page.models import Page
 from page.serializers import PageSerializer, CreatePageSerializer, UpdatePageSerializer, ApproveRequestsSerializer, \
     PageOwnerSerializer, RejectRequestsSerializer
-from user.models import User
-from user.serializers import UserSerializer
 
 
 class PagesView(ModelViewSet):
@@ -62,18 +59,6 @@ class PagesView(ModelViewSet):
         queryset = Page.objects.filter(owner=user)
         serializer = self.get_serializer_class()
         serializer = serializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    @action(permission_classes=[IsAuthenticated], url_path='all-liked-posts', detail=False)
-    def all_liked_posts(self, request: HttpRequest) -> HttpResponse:
-        posts = User.objects.get(pk=request.user.id).liked_by_post.all()
-        serializer = PostSerializer(posts, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    @action(permission_classes=[IsAuthenticated], url_path='page-liked-posts', detail=True)
-    def page_liked_posts(self, request: HttpRequest, pk: int) -> HttpResponse:
-        posts = User.objects.get(pk=request.user.id).liked_by_post.filter(page=pk)
-        serializer = PostSerializer(posts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(methods=['PATCH'], url_path='approve-requests', permission_classes=[IsPageOwner],

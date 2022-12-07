@@ -27,12 +27,12 @@
     "follow_requests": [user_id]
     }</p>
     </li>
-    <li> (GET) <code>/api/page/all-liked-posts/</code> - all your liked posts</li>
-    <li> (GET) <code>/api/page/<:pk>/page-liked-posts/</code> - all your liked posts on page</li>
 <hr>
 <h4>Post</h4>
 <li> (POST) <code>/api/post/</code> - create post</li>
 <li> (PATCH) <code>/api/post/<:pk>/</code> - update post</li>
 <li> (GET) <code>/api/post/<:pk>/like/</code> - like/unlike post switch</li>
+    <li> (GET) <code>/api/post/all-liked-posts/</code> - all your liked posts</li>
+    <li> (GET) <code>/api/post/<:pk>/page-liked-posts/</code> - all your liked posts on page</li>
     
 </ul>
