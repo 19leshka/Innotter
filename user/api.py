@@ -56,9 +56,8 @@ class AuthAPIView(ViewSet):
 
     @action(detail=False, methods=['post'])
     def register(self, request: HttpRequest) -> HttpResponse:
-        user = request.data.get('user', {})
         serializer = self.get_serializer_class()
-        serializer = serializer(data=user)
+        serializer = serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
