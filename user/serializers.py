@@ -1,10 +1,6 @@
 from rest_framework import serializers
 
-from innotter.services import AwsService
 from user.models import User
-
-
-ALLOWED_IMAGE_EXTENSIONS = ('png', 'jpg', 'jpeg')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -42,7 +38,6 @@ class RegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['email', 'username', 'password', 'image']
-
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
