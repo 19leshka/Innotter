@@ -21,6 +21,12 @@ class UserView(ModelViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
 
+    def list(self, request, *args, **kwargs):
+        serializer = UserSerializer(self.queryset, many=True)
+        for user in serializer.data:
+            user['image'] = AwsService.get_file_url(user['image'])
+        return Response(serializer.data)
+
     @action(detail=False)
     def profile(self, request: HttpRequest) -> HttpResponse:
         serialized_user = self.serializer_class(request.user)
