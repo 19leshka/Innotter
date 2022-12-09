@@ -1,5 +1,6 @@
 from django.contrib.auth.hashers import make_password
 from django.http import HttpRequest, HttpResponse
+from django.shortcuts import get_object_or_404
 from rest_framework import status, serializers
 from rest_framework.decorators import action
 from rest_framework.viewsets import ModelViewSet, ViewSet
@@ -25,12 +26,21 @@ class UserView(ModelViewSet):
         serializer = UserSerializer(self.queryset, many=True)
         for user in serializer.data:
             user['image'] = AwsService.get_file_url(user['image'])
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def retrieve(self, request, pk):
+        user = get_object_or_404(self.queryset, pk=pk)
+        serialized_data = UserSerializer(user).data
+        data = serialized_data
+        image = AwsService.get_file_url(key=data['image'])
+        data['image'] = image
+        return Response(data, status=status.HTTP_200_OK)
 
     @action(detail=False)
     def profile(self, request: HttpRequest) -> HttpResponse:
-        serialized_user = self.serializer_class(request.user)
-        return Response(serialized_user.data, status=status.HTTP_200_OK)
+        serialized_user_data = self.serializer_class(request.user).data
+        serialized_user_data['image'] = AwsService.get_file_url(serialized_user_data['image'])
+        return Response(serialized_user_data, status=status.HTTP_200_OK)
 
     @action(detail=False, url_path='update-profile', methods=['patch'])
     def update_profile(self, request: HttpRequest) -> HttpResponse:
