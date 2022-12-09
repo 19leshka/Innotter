@@ -5,8 +5,9 @@ from tag.models import Tag
 class TagService:
     @staticmethod
     def process_tags(request: HttpRequest) -> list:
+        new_data = request.POST.copy()
         tags_id = []
-        if tags := request.data.pop('tags', None):
+        if tags := new_data.pop('tags', None):
             existing_tags = Tag.objects.filter(name__in=tags)
             for tag in existing_tags:
                 tags_id.append(tag.id)

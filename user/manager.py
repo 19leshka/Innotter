@@ -4,14 +4,14 @@ from .enum import Roles
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, username: str, email: str, password: str = None, role: str = Roles.USER) -> 'User':
+    def create_user(self, username: str, email: str, password: str = None, role: str = Roles.USER, image: str = None) -> 'User':
         if username is None:
             raise TypeError('Users must have a username.')
 
         if email is None:
             raise TypeError('Users must have an email address.')
 
-        user = self.model(username=username, email=self.normalize_email(email), role=role)
+        user = self.model(username=username, email=self.normalize_email(email), role=role, image=image)
 
         if role == 'admin':
             user.setAdminRole()

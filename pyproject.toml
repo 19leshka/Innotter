@@ -13,6 +13,7 @@ load-dotenv = "^0.1.0"
 psycopg2 = "^2.9.5"
 djangorestframework = "^3.14.0"
 pyjwt = "^2.6.0"
+boto3 = "^1.26.25"
 
 [build-system]
 requires = ["poetry-core"]
