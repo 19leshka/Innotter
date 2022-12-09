@@ -31,10 +31,9 @@ class UserView(ModelViewSet):
     def retrieve(self, request, pk):
         user = get_object_or_404(self.queryset, pk=pk)
         serialized_data = UserSerializer(user).data
-        data = serialized_data
-        image = AwsService.get_file_url(key=data['image'])
-        data['image'] = image
-        return Response(data, status=status.HTTP_200_OK)
+        image = AwsService.get_file_url(key=serialized_data['image'])
+        serialized_data['image'] = image
+        return Response(serialized_data, status=status.HTTP_200_OK)
 
     @action(detail=False)
     def profile(self, request: HttpRequest) -> HttpResponse:

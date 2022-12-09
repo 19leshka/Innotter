@@ -21,27 +21,26 @@ class PageSerializer(BlockPageSerializer, serializers.ModelSerializer):
     class Meta:
         model = Page
         fields = (
-            'id', 'uuid', 'name', 'tags', 'image', 'description', 'owner', 'followers', 'is_private', 'is_blocked')
+            'id', 'uuid', 'name', 'tags', 'image', 'description', 'owner', 'followers', 'is_private', 'is_blocked', 'image')
         read_only_fields = ('followers',)
 
 
 class CreatePageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Page
-        fields = ('id', 'uuid', 'name', 'tags', 'image', 'owner', 'description', 'is_private')
+        fields = ('id', 'uuid', 'name', 'tags', 'image', 'owner', 'description', 'image', 'is_private')
 
 
 class UpdatePageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Page
-        fields = ('id', 'uuid', 'name', 'tags', 'image', 'owner', 'description', 'is_private')
+        fields = ('id', 'uuid', 'name', 'tags', 'image', 'owner', 'description', 'is_private', 'image')
 
 
 class PageOwnerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Page
-        fields = ('id', 'uuid', 'name', 'tags', 'owner', 'description', 'followers', 'follow_requests', 'is_private',
-                  'is_blocked', 'unblock_date')
+        fields = ('id', 'uuid', 'name', 'tags', 'owner', 'description', 'followers', 'follow_requests', 'is_private', 'image', 'is_blocked', 'unblock_date')
         read_only_fields = ('is_blocked', 'unblock_date')
 
 

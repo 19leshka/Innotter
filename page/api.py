@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from innotter.services import AwsService
 from page.permissions import PageAccessPermission, IsPageOwner
 from page.services import PageService
 from tag.services import TagService
@@ -33,7 +34,10 @@ class PagesView(ModelViewSet):
 
     def create(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         tags_id = TagService.process_tags(request)
-        data = {**request.data, 'tags': tags_id, 'owner': self.request.user.id}
+        image = None
+        if 'image' in request.data:
+            image = AwsService.upload_file(self.request.data['image'], 'page' + str(Page.objects.latest('id').id + 1))
+        data = {'name': request.data['name'], 'description': request.data['description'], 'tags': tags_id, 'owner': request.user.id, 'image': image}
         serializer = self.get_serializer_class()
         serializer = serializer(data=data)
         serializer.is_valid(raise_exception=True)
