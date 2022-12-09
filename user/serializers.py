@@ -44,14 +44,4 @@ class RegistrationSerializer(serializers.ModelSerializer):
         fields = ['email', 'username', 'password', 'image']
 
     def create(self, validated_data):
-        if 'image' in validated_data:
-            if validated_data.image.rsplit('.')[-1].lower() not in ALLOWED_IMAGE_EXTENSIONS:
-                raise serializers.ValidationError(
-                    {'status': f'Invalid uploaded image type: {validated_data.image}'}
-                )
-
-            image = AwsService.upload_file(validated_data.image, 'user' + str(User.objects.latest('id').id + 1))
-
-            validated_data.image = image
-
         return User.objects.create_user(**validated_data)

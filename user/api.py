@@ -1,8 +1,10 @@
+from django.contrib.auth.hashers import make_password
 from django.http import HttpRequest, HttpResponse
-from rest_framework import status
+from rest_framework import status, serializers
 from rest_framework.decorators import action
 from rest_framework.viewsets import ModelViewSet, ViewSet
 
+from innotter.services import AwsService
 from .permissioms import IsAdmin
 from .serializers import RegistrationSerializer
 from rest_framework.response import Response
@@ -27,6 +29,11 @@ class UserView(ModelViewSet):
     @action(detail=False, url_path='update-profile', methods=['patch'])
     def update_profile(self, request: HttpRequest) -> HttpResponse:
         serializer_data = request.data
+
+        if 'image' in request.data:
+            image = AwsService.upload_file(request.data['image'], str(request.user.image))
+            serializer_data['image'] = image
+
         serializer = self.serializer_class(
             request.user, data=serializer_data, partial=True
         )
@@ -56,11 +63,16 @@ class AuthAPIView(ViewSet):
 
     @action(detail=False, methods=['post'])
     def register(self, request: HttpRequest) -> HttpResponse:
+        data = request.data
+
+        if 'image' in request.data:
+            image = AwsService.upload_file(request.data['image'], 'user' + str(User.objects.latest('id').id + 1))
+            data['image'] = image
+
         serializer = self.get_serializer_class()
-        serializer = serializer(data=request.data)
+        serializer = serializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @action(detail=False, methods=['post'])
