@@ -16,6 +16,7 @@ services:
       POSTGRES_DB: $SQL_DATABASE
     depends_on:
       - postgres
+      - rabbitmq
 
   postgres:
     image: postgres
@@ -36,6 +37,30 @@ services:
     ports:
       - "5050:80"
     restart: unless-stopped
+
+  celery:
+    build: .
+    container_name: celery
+    restart: on-failure
+    command: celery -A innotter worker -l INFO
+    tty: true
+    stdin_open: true
+    volumes:
+      - .:/app
+    env_file:
+      - ./.env
+    depends_on:
+      - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq
+    container_name: rabbitmq
+    restart: on-failure
+    env_file:
+      - ./.env
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 
 volumes:
   postgres:
