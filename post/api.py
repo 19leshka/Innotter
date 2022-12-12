@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from innotter.services import AwsService
 from post.models import Post
 from post.permissions import IsPostOwner
 from post.serializers import PostSerializer, CreatePostSerializer, UpdatePostSerializer
@@ -54,7 +55,8 @@ class PostView(ModelViewSet):
         serializer = serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        return Response(data, status=status.HTTP_201_CREATED)
+        AwsService.send_email(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def update(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         data = {**request.data, 'owner': self.request.user.id}
