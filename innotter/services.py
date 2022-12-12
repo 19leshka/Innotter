@@ -13,20 +13,25 @@ class AwsService:
         return credentials
 
     @staticmethod
-    def get_client():
+    def get_client(name: str):
         credentials = AwsService.get_credentials()
-        return boto3.client('s3', **credentials)
+        client = boto3.client(name, **credentials)
+
+        if name == 'ses':
+            client.verify_email_identity(EmailAddress=os.getenv('EMAIL_HOST_USER'))
+
+        return client
 
     @staticmethod
     def upload_file(file_path: str, key: str) -> str:
-        client_s3 = AwsService.get_client()
+        client_s3 = AwsService.get_client('s3')
         client_s3.upload_fileobj(file_path, Bucket=os.getenv('BUCKET_NAME'), Key=key)
 
         return key
 
     @staticmethod
     def get_file_url(key: str = None):
-        client_s3 = AwsService.get_client()
+        client_s3 = AwsService.get_client('s3')
 
         try:
             response = client_s3.generate_presigned_url('get_object',
