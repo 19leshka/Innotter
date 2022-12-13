@@ -22,4 +22,4 @@ class User(AbstractUser):
         return self.email
 
     def setAdminRole(self):
-        self.role = self.Roles.ADMIN
+        self.role = Roles.ADMIN
