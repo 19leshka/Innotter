@@ -9,6 +9,7 @@ from post.models import Post
 from post.permissions import IsPostOwner
 from post.serializers import PostSerializer, CreatePostSerializer, UpdatePostSerializer
 from post.services import PostServices
+from post.tasks import send_email
 from user.permissioms import IsAdminOrModerator
 
 
@@ -54,7 +55,8 @@ class PostView(ModelViewSet):
         serializer = serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        return Response(data, status=status.HTTP_201_CREATED)
+        send_email.delay(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def update(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         data = {**request.data, 'owner': self.request.user.id}
