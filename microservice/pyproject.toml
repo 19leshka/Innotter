@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "microservice"
+version = "0.1.0"
+description = ""
+authors = ["…"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.88.0"
+uvicorn = {extras = ["standard"], version = "^0.20.0"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
