@@ -40,7 +40,7 @@ class AwsService:
                     'Bucket': os.getenv('BUCKET_NAME'),
                     'Key': key
                 },
-                ExpiresIn=3600
+                ExpiresIn=os.getenv('EXPIRES_IN')
             )
         except:
             return None
