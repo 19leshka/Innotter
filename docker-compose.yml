@@ -49,6 +49,8 @@ services:
       - .:/app
     env_file:
       - ./.env
+    environment:
+        CELERY_BROKER_URL: $CELERY_BROKER_URL
     depends_on:
       - rabbitmq
 
@@ -58,9 +60,13 @@ services:
     restart: on-failure
     env_file:
       - ./.env
+    environment:
+      RABBITMQ_ERLANG_COOKIE: $RABBITMQ_ERLANG_COOKIE
+      RABBITMQ_DEFAULT_USER: $RABBITMQ_DEFAULT_USER
+      RABBITMQ_DEFAULT_PASS: $RABBITMQ_DEFAULT_PASS
+      RABBITMQ_DEFAULT_VHOST: $RABBITMQ_DEFAULT_VHOST
     ports:
       - "5672:5672"
-      - "15672:15672"
 
 volumes:
   postgres:
