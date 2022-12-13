@@ -54,7 +54,7 @@ class AwsService:
         emails = list(Page.objects.values_list('followers__email', flat=True).filter(pk=data['page']))
         user = User.objects.get(pk=data['owner'])
         page = Page.objects.get(pk=data['page'])
-        message = f"New post by {str(user.username)} on {str(page.name)}."
+        message = f"New post by {user.username} on {page.name}."
 
         response = client_ses.send_email(
             Source=os.getenv('HOST_EMAIL'),
