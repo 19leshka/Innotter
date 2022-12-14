@@ -10,7 +10,7 @@ RUN apt install -y netcat
 RUN pip install "poetry==1.2.2"
 
 # Copy only requirements to cache them in docker layer
-COPY poetry.lock pyproject.toml ./
+COPY poetry.lock pyproject.toml main.py ./
 
 # Project initialization:
 RUN poetry config virtualenvs.create false \
