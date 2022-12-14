@@ -68,5 +68,16 @@ services:
     ports:
       - "5672:5672"
 
+  fastapi:
+    container_name: fastapi
+    build:
+      context: ./microservice
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - rabbitmq
+
 volumes:
   postgres:
