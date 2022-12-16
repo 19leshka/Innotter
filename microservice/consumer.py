@@ -1,6 +1,11 @@
-import json, os, logger, pika
+import json
+import os
+import logger
 
+import pika
 from aio_pika import connect_robust
+
+from services import DynamoDBService
 
 
 class PikaClient:
@@ -23,18 +28,22 @@ class PikaClient:
 
     async def process_incoming_message(self, message):
         async with message.process():
-            try:
-                message = json.loads(message.body.decode())
-                # message_type = message['type']
-                #
-                # if message_type == MessageType.CREATE.value:
-                #     AWSManager.put_item(message)
-                #
-                # elif message_type == MessageType.UPDATE.value:
-                #     AWSManager.update_item(message)
-                #
-                # elif message_type == MessageType.DELETE.value:
-                #     AWSManager.delete_item(message)
+            message = json.loads(message.body.decode())
+            message_type = message['type']
 
-            except Exception as e:
-                logger.error(e)
+            if message_type == "create":
+                DynamoDBService.put_item(message)
+            elif message_type == "delete":
+                DynamoDBService.delete_item(message)
+            # elif message_type == "add_like":
+            #     DynamoDBService.update_item(message)
+            # elif message_type == "del_like":
+            #     DynamoDBService.update_item(message)
+            elif message_type == "add_post":
+                DynamoDBService.add_post(message)
+            elif message_type == "del_post":
+                DynamoDBService.delete_post(message)
+            # elif message_type == "add_follower":
+            #     DynamoDBService.update_item(message)
+            # elif message_type == "del_follower":
+            #     DynamoDBService.update_item(message)
