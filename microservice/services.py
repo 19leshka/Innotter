@@ -35,14 +35,14 @@ class DynamoDBService:
             table = client_dynamo.create_table(
                 AttributeDefinitions=[
                     {
-                        'AttributeName': 'Page',
-                        'AttributeType': 'S'
+                        'AttributeName': 'id',
+                        'AttributeType': 'N'
                     },
                 ],
                 TableName=os.getenv('DYNAMODB_TABLE_NAME'),
                 KeySchema=[
                     {
-                        'AttributeName': 'Page',
+                        'AttributeName': 'id',
                         'KeyType': 'HASH'
                     },
                 ],
@@ -66,12 +66,16 @@ class DynamoDBService:
     @staticmethod
     def put_item(page: str):
         table = DynamoDBService.get_table()
+        print(page)
         response = table.put_item(
             Item={
-                'Page': page
+                'id': page['id'],
+                'total_likes': 0,
+                'total_folowers': 0,
+                'total_posts': 0
             }
         )
-
+        print(response)
         return response
 
     @staticmethod
@@ -79,19 +83,42 @@ class DynamoDBService:
         table = DynamoDBService.get_table()
         response = table.delete_item(
             Item={
-                'Page': page
+                'id': page['id']
             }
         )
 
         return response
 
     @staticmethod
-    def update_item(page: str):
+    def add_post(page: str):
         table = DynamoDBService.get_table()
         response = table.update_item(
-            Item={
-                'Page': page
+            Key={
+                'id': page['page']
+            },
+            UpdateExpression="SET #total_posts = #total_posts + :increment",
+            ExpressionAttributeNames={
+                "#total_posts": "total_posts"
+            },
+            ExpressionAttributeValues={
+                ":increment": 1
             }
         )
+        return response
 
+    @staticmethod
+    def delete_post(page: str):
+        table = DynamoDBService.get_table()
+        response = table.update_item(
+            Key={
+                'id': page['id']
+            },
+            UpdateExpression="SET #total_posts = #total_posts - :decrement",
+            ExpressionAttributeNames={
+                "#total_posts": "total_posts"
+            },
+            ExpressionAttributeValues={
+                ":decrement": 1
+            }
+        )
         return response
