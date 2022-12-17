@@ -1,4 +1,7 @@
 from django.http import HttpRequest
+
+from innotter.enum import MessageType
+from innotter.producer import producer
 from page.models import Page
 
 
@@ -13,9 +16,11 @@ class PageService:
             else:
                 page.followers.add(request.user)
                 message = {'status': 'You follow this page'}
+                producer({'id': pk, 'count': 1, 'type': MessageType.ADD_FOLLOWER.value})
         else:
             page.followers.remove(request.user)
             message = {'status': 'You unfollow this page'}
+            producer({'id': pk, 'count': 1, 'type': MessageType.DEL_FOLLOWER.value})
         return message
 
     @staticmethod

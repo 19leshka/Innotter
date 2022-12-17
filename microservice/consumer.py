@@ -43,7 +43,7 @@ class PikaClient:
                 DynamoDBService.add_post(message)
             elif message_type == "del_post":
                 DynamoDBService.delete_post(message)
-            # elif message_type == "add_follower":
-            #     DynamoDBService.update_item(message)
-            # elif message_type == "del_follower":
-            #     DynamoDBService.update_item(message)
+            elif message_type == "add_follower":
+                DynamoDBService.add_follower(message)
+            elif message_type == "del_follower":
+                DynamoDBService.del_follower(message)

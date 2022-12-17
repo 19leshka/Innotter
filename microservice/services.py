@@ -156,3 +156,37 @@ class DynamoDBService:
             }
         )
         return response
+
+    @staticmethod
+    def add_follower(data: int):
+        table = DynamoDBService.get_table()
+        response = table.update_item(
+            Key={
+                'id': int(data['id'])
+            },
+            UpdateExpression="SET #total_folowers = #total_folowers + :increment",
+            ExpressionAttributeNames={
+                "#total_folowers": "total_folowers"
+            },
+            ExpressionAttributeValues={
+                ":increment": data['count']
+            }
+        )
+        return response
+
+    @staticmethod
+    def del_follower(data: dict):
+        table = DynamoDBService.get_table()
+        response = table.update_item(
+            Key={
+                'id': int(data['id'])
+            },
+            UpdateExpression="SET #total_folowers = #total_folowers - :decrement",
+            ExpressionAttributeNames={
+                "#total_folowers": "total_folowers"
+            },
+            ExpressionAttributeValues={
+                ":decrement": data['count']
+            }
+        )
+        return response
