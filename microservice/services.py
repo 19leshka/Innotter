@@ -122,3 +122,37 @@ class DynamoDBService:
             }
         )
         return response
+
+    @staticmethod
+    def add_like(page: str):
+        table = DynamoDBService.get_table()
+        response = table.update_item(
+            Key={
+                'id': page['id']
+            },
+            UpdateExpression="SET #total_likes = #total_likes + :increment",
+            ExpressionAttributeNames={
+                "#total_likes": "total_likes"
+            },
+            ExpressionAttributeValues={
+                ":increment": 1
+            }
+        )
+        return response
+
+    @staticmethod
+    def delete_like(page: str):
+        table = DynamoDBService.get_table()
+        response = table.update_item(
+            Key={
+                'id': page['id']
+            },
+            UpdateExpression="SET #total_likes = #total_likes - :decrement",
+            ExpressionAttributeNames={
+                "#total_likes": "total_likes"
+            },
+            ExpressionAttributeValues={
+                ":decrement": 1
+            }
+        )
+        return response

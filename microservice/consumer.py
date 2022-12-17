@@ -35,10 +35,10 @@ class PikaClient:
                 DynamoDBService.put_item(message)
             elif message_type == "delete":
                 DynamoDBService.delete_item(message)
-            # elif message_type == "add_like":
-            #     DynamoDBService.update_item(message)
-            # elif message_type == "del_like":
-            #     DynamoDBService.update_item(message)
+            elif message_type == "add_like":
+                DynamoDBService.add_like(message)
+            elif message_type == "del_like":
+                DynamoDBService.delete_like(message)
             elif message_type == "add_post":
                 DynamoDBService.add_post(message)
             elif message_type == "del_post":
