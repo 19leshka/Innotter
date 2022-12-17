@@ -64,14 +64,13 @@ class DynamoDBService:
         return response
 
     @staticmethod
-    def put_item(page: str):
+    def put_item(data: dict):
         table = DynamoDBService.get_table()
-        print(page)
         response = table.put_item(
             Item={
-                'id': page['id'],
+                'id': data['id'],
                 'total_likes': 0,
-                'total_folowers': 0,
+                'total_followers': 0,
                 'total_posts': 0
             }
         )
@@ -79,22 +78,22 @@ class DynamoDBService:
         return response
 
     @staticmethod
-    def delete_item(page: str):
+    def delete_item(data: dict):
         table = DynamoDBService.get_table()
         response = table.delete_item(
             Item={
-                'id': page['id']
+                'id': data['id']
             }
         )
 
         return response
 
     @staticmethod
-    def add_post(page: str):
+    def add_post(data: dict):
         table = DynamoDBService.get_table()
         response = table.update_item(
             Key={
-                'id': page['page']
+                'id': data['page']
             },
             UpdateExpression="SET #total_posts = #total_posts + :increment",
             ExpressionAttributeNames={
@@ -107,11 +106,11 @@ class DynamoDBService:
         return response
 
     @staticmethod
-    def delete_post(page: str):
+    def delete_post(data: dict):
         table = DynamoDBService.get_table()
         response = table.update_item(
             Key={
-                'id': page['id']
+                'id': data['id']
             },
             UpdateExpression="SET #total_posts = #total_posts - :decrement",
             ExpressionAttributeNames={
@@ -124,11 +123,11 @@ class DynamoDBService:
         return response
 
     @staticmethod
-    def add_like(page: str):
+    def add_like(data: dict):
         table = DynamoDBService.get_table()
         response = table.update_item(
             Key={
-                'id': page['id']
+                'id': data['id']
             },
             UpdateExpression="SET #total_likes = #total_likes + :increment",
             ExpressionAttributeNames={
@@ -141,11 +140,11 @@ class DynamoDBService:
         return response
 
     @staticmethod
-    def delete_like(page: str):
+    def delete_like(data: dict):
         table = DynamoDBService.get_table()
         response = table.update_item(
             Key={
-                'id': page['id']
+                'id': data['id']
             },
             UpdateExpression="SET #total_likes = #total_likes - :decrement",
             ExpressionAttributeNames={
@@ -158,15 +157,15 @@ class DynamoDBService:
         return response
 
     @staticmethod
-    def add_follower(data: int):
+    def add_follower(data: dict):
         table = DynamoDBService.get_table()
         response = table.update_item(
             Key={
                 'id': int(data['id'])
             },
-            UpdateExpression="SET #total_folowers = #total_folowers + :increment",
+            UpdateExpression="SET #total_followers = #total_followers + :increment",
             ExpressionAttributeNames={
-                "#total_folowers": "total_folowers"
+                "#total_followers": "total_followers"
             },
             ExpressionAttributeValues={
                 ":increment": data['count']
@@ -181,9 +180,9 @@ class DynamoDBService:
             Key={
                 'id': int(data['id'])
             },
-            UpdateExpression="SET #total_folowers = #total_folowers - :decrement",
+            UpdateExpression="SET #total_followers = #total_followers - :decrement",
             ExpressionAttributeNames={
-                "#total_folowers": "total_folowers"
+                "#total_followers": "total_followers"
             },
             ExpressionAttributeValues={
                 ":decrement": data['count']
