@@ -377,7 +377,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "d42688d3cabb7995875458d98b696a5a9527e46762f383ad4dea9cabca88023b"
+content-hash = "cc2dfb267b5779245587cbcb622147ed00a35c991ae505b4e1b62ea63e9ac7c7"
 
 [metadata.files]
 aio-pika = [
