@@ -55,16 +55,18 @@ class DynamoDBService:
         return table
 
     @staticmethod
-    def get_item():
+    def get_item(item_id: int) -> dict:
         table = DynamoDBService.get_table()
         response = table.get_item(
-            Key={'AttributeName': {'S': 'Page'}}
+            Key={
+                'id': item_id
+            }
         )
 
         return response
 
     @staticmethod
-    def put_item(data: dict):
+    def put_item(data: dict) -> dict:
         table = DynamoDBService.get_table()
         response = table.put_item(
             Item={
@@ -74,11 +76,10 @@ class DynamoDBService:
                 'total_posts': 0
             }
         )
-        print(response)
         return response
 
     @staticmethod
-    def delete_item(data: dict):
+    def delete_item(data: dict) -> dict:
         table = DynamoDBService.get_table()
         response = table.delete_item(
             Item={
@@ -89,7 +90,7 @@ class DynamoDBService:
         return response
 
     @staticmethod
-    def add_post(data: dict):
+    def add_post(data: dict) -> dict:
         table = DynamoDBService.get_table()
         response = table.update_item(
             Key={
@@ -106,7 +107,7 @@ class DynamoDBService:
         return response
 
     @staticmethod
-    def delete_post(data: dict):
+    def delete_post(data: dict) -> dict:
         table = DynamoDBService.get_table()
         response = table.update_item(
             Key={
@@ -123,7 +124,7 @@ class DynamoDBService:
         return response
 
     @staticmethod
-    def add_like(data: dict):
+    def add_like(data: dict) -> dict:
         table = DynamoDBService.get_table()
         response = table.update_item(
             Key={
@@ -140,7 +141,7 @@ class DynamoDBService:
         return response
 
     @staticmethod
-    def delete_like(data: dict):
+    def delete_like(data: dict) -> dict:
         table = DynamoDBService.get_table()
         response = table.update_item(
             Key={
@@ -157,7 +158,7 @@ class DynamoDBService:
         return response
 
     @staticmethod
-    def add_follower(data: dict):
+    def add_follower(data: dict) -> dict:
         table = DynamoDBService.get_table()
         response = table.update_item(
             Key={
@@ -174,7 +175,7 @@ class DynamoDBService:
         return response
 
     @staticmethod
-    def del_follower(data: dict):
+    def del_follower(data: dict) -> dict:
         table = DynamoDBService.get_table()
         response = table.update_item(
             Key={

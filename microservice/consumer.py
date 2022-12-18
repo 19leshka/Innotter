@@ -1,6 +1,5 @@
 import json
 import os
-import logger
 
 import pika
 from aio_pika import connect_robust
