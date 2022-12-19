@@ -14,7 +14,7 @@ class Item(BaseModel):
 
 
 @router.get('/statistics/{page_id}', response_model=Item)
-async def statistics(item_id: int) -> dict:
-    item = DynamoDBService.get_item(item_id)['Item']
-    return {**item}
+async def statistics(page_id: int) -> dict:
+    item = DynamoDBService.get_item(page_id)['Item']
+    return item
 

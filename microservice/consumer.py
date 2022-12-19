@@ -32,7 +32,7 @@ class PikaClient:
             if message_type == "create":
                 DynamoDBService.put_item(message)
 
-            elif message_type == "delete":
+            if message_type == "delete":
                 DynamoDBService.delete_item(message)
 
             if message_type in ("add_like", "del_like", "add_post", "del_post", "add_follower", "del_follower"):
