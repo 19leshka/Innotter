@@ -16,11 +16,11 @@ class PageService:
             else:
                 page.followers.add(request.user)
                 message = {'status': 'You follow this page'}
-                producer({'id': pk, 'count': 1, 'type': MessageType.ADD_FOLLOWER.value})
+                producer({'id': pk, 'count': 1, 'value': 'total_followers', 'type': MessageType.ADD_FOLLOWER.value})
         else:
             page.followers.remove(request.user)
             message = {'status': 'You unfollow this page'}
-            producer({'id': pk, 'count': 1, 'type': MessageType.DEL_FOLLOWER.value})
+            producer({'id': pk, 'count': -1, 'value': 'total_followers', 'type': MessageType.DEL_FOLLOWER.value})
         return message
 
     @staticmethod

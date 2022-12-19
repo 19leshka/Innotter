@@ -57,7 +57,7 @@ class ApproveRequestsSerializer(serializers.ModelSerializer):
             page.follow_requests.remove(user)
             page.followers.add(user)
         page.save()
-        producer({'id': page.id, 'count': len(users), 'type': MessageType.ADD_LIKE.value})
+        producer({'id': page.id, 'count': len(users), 'value': 'total_followers', 'type': MessageType.ADD_LIKE.value})
         return page
 
 
