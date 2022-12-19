@@ -5,6 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from innotter.enum import MessageType
+from innotter.producer import producer
 from post.models import Post
 from post.permissions import IsPostOwner
 from post.serializers import PostSerializer, CreatePostSerializer, UpdatePostSerializer
@@ -56,7 +58,13 @@ class PostView(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         send_email.delay(serializer.data)
+        producer({'id': serializer.data.get("page"), 'count': 1, 'value': 'total_posts', 'type': MessageType.ADD_POST.value})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def perform_destroy(self, instance):
+        producer({'id': instance.page.id, 'count': -1, 'value': 'total_posts', 'type': MessageType.DEL_POST.value})
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def update(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         data = {**request.data, 'owner': self.request.user.id}

@@ -6,7 +6,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from innotter.producer import producer
 from innotter.services import AwsService
+from innotter.enum import MessageType
 from page.permissions import PageAccessPermission, IsPageOwner
 from page.services import PageService
 from tag.services import TagService
@@ -56,6 +58,7 @@ class PagesView(ModelViewSet):
         serializer = serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
+        producer({**serializer.data, 'type': MessageType.CREATE.value})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def update(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
@@ -69,6 +72,11 @@ class PagesView(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def perform_destroy(self, instance):
+        producer({'id': instance.id, 'type': MessageType.DELETE.value})
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(url_path='follow', permission_classes=[IsAuthenticated], detail=True)
     def follow(self, request: HttpRequest, pk: int = None) -> HttpResponse:
@@ -101,7 +109,7 @@ class PagesView(ModelViewSet):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @action(detail=True,methods=['POST'], permission_classes=[IsAdminOrModerator])
+    @action(detail=True, methods=['POST'], permission_classes=[IsAdminOrModerator])
     def block(self, request: HttpRequest, pk: int) -> HttpResponse:
         data = PageService.block_unblock(pk)
         return Response(data, status=status.HTTP_200_OK)

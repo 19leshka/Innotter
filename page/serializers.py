@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from innotter.enum import MessageType
+from innotter.producer import producer
 from post.models import Post
 from tag.serializers import TagSerializer
 from user.serializers import UserSerializer
@@ -54,8 +56,8 @@ class ApproveRequestsSerializer(serializers.ModelSerializer):
         for user in users:
             page.follow_requests.remove(user)
             page.followers.add(user)
-
         page.save()
+        producer({'id': page.id, 'count': len(users), 'value': 'total_followers', 'type': MessageType.ADD_LIKE.value})
         return page
 
 
