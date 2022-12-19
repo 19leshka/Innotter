@@ -52,6 +52,8 @@ class DynamoDBService:
         except client_dynamo.exceptions.ResourceInUseException:
             table = resource_dynamo.Table(os.getenv('DYNAMODB_TABLE_NAME'))
 
+        print(table)
+
         return table
 
     @staticmethod
@@ -90,103 +92,18 @@ class DynamoDBService:
         return response
 
     @staticmethod
-    def add_post(data: dict) -> dict:
+    def update_stat(data):
         table = DynamoDBService.get_table()
         response = table.update_item(
             Key={
-                'id': data['page']
+                'id': int(data.get('id'))
             },
-            UpdateExpression="SET #total_posts = #total_posts + :increment",
+            UpdateExpression=f"SET #{data.get('value')} = #{data.get('value')} + :decrement",
             ExpressionAttributeNames={
-                "#total_posts": "total_posts"
+                f"#{data.get('value')}": f"{data.get('value')}"
             },
             ExpressionAttributeValues={
-                ":increment": 1
-            }
-        )
-        return response
-
-    @staticmethod
-    def delete_post(data: dict) -> dict:
-        table = DynamoDBService.get_table()
-        response = table.update_item(
-            Key={
-                'id': data['id']
-            },
-            UpdateExpression="SET #total_posts = #total_posts - :decrement",
-            ExpressionAttributeNames={
-                "#total_posts": "total_posts"
-            },
-            ExpressionAttributeValues={
-                ":decrement": 1
-            }
-        )
-        return response
-
-    @staticmethod
-    def add_like(data: dict) -> dict:
-        table = DynamoDBService.get_table()
-        response = table.update_item(
-            Key={
-                'id': data['id']
-            },
-            UpdateExpression="SET #total_likes = #total_likes + :increment",
-            ExpressionAttributeNames={
-                "#total_likes": "total_likes"
-            },
-            ExpressionAttributeValues={
-                ":increment": 1
-            }
-        )
-        return response
-
-    @staticmethod
-    def delete_like(data: dict) -> dict:
-        table = DynamoDBService.get_table()
-        response = table.update_item(
-            Key={
-                'id': data['id']
-            },
-            UpdateExpression="SET #total_likes = #total_likes - :decrement",
-            ExpressionAttributeNames={
-                "#total_likes": "total_likes"
-            },
-            ExpressionAttributeValues={
-                ":decrement": 1
-            }
-        )
-        return response
-
-    @staticmethod
-    def add_follower(data: dict) -> dict:
-        table = DynamoDBService.get_table()
-        response = table.update_item(
-            Key={
-                'id': int(data['id'])
-            },
-            UpdateExpression="SET #total_followers = #total_followers + :increment",
-            ExpressionAttributeNames={
-                "#total_followers": "total_followers"
-            },
-            ExpressionAttributeValues={
-                ":increment": data['count']
-            }
-        )
-        return response
-
-    @staticmethod
-    def del_follower(data: dict) -> dict:
-        table = DynamoDBService.get_table()
-        response = table.update_item(
-            Key={
-                'id': int(data['id'])
-            },
-            UpdateExpression="SET #total_followers = #total_followers - :decrement",
-            ExpressionAttributeNames={
-                "#total_followers": "total_followers"
-            },
-            ExpressionAttributeValues={
-                ":decrement": data['count']
+                ":decrement": data.get('count')
             }
         )
         return response

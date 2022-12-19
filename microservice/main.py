@@ -1,5 +1,4 @@
 import asyncio
-import logger
 
 from fastapi import FastAPI
 from router import router
@@ -9,16 +8,13 @@ from consumer import PikaClient
 
 #
 #
-class FooApp(FastAPI):
+class StatisticsApp(FastAPI):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.pika_client = PikaClient(self.log_incoming_message)
-
-    def log_incoming_message(cls, message: dict):
-        logger.info('Here we got incoming message %s', message)
+        self.pika_client = PikaClient()
 
 
-app = FooApp()
+app = StatisticsApp()
 app.include_router(router)
 
 
