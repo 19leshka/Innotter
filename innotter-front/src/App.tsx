@@ -1,11 +1,26 @@
 import React from 'react';
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import {Provider} from 'react-redux';
+import store from './redux/store';
 
-function App() {
+const App:React.FC = () => {
   return (
     <div>
-      <p>Hello world!</p>
+      <Routes>
+          {/* <Route path="/login" element={<Login/>}/> */}
+      </Routes>
     </div>
   );
 }
 
-export default App;
+const Innotter:React.FC = () => {
+  return (
+    <BrowserRouter> 
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </BrowserRouter>
+  )
+}
+
+export default Innotter;
