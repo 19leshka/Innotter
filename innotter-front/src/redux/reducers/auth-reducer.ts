@@ -1,5 +1,5 @@
 import {authAPI} from '../../api/api';
-import { AppDispatch } from '../store';
+import { TypedDispatch } from '../store';
 import {AuthAction, AuthActionTypes, AuthState, FormDataTypes, SetUserData, SetLoginError} from "../types/auth";
 
 const initialState: AuthState = {
@@ -46,7 +46,7 @@ export const setLoginErrorActionCreator: SetLoginError = (error) => ({
     payload: error
 })
 
-export const loginThunkCreator = (formData: FormDataTypes) => async (dispatch: AppDispatch) => {
+export const loginThunkCreator = (formData: FormDataTypes) => async (dispatch: TypedDispatch) => {
     const response = await authAPI.login(formData.email, formData.password);
     if(response.data.resultCode === 200) {
         const {id, username, email, image} = response.data.user;
