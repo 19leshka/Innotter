@@ -1,13 +1,14 @@
-import React from 'react';
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
-import {Provider} from 'react-redux';
-import store from './redux/store';
+import React from 'react'
+import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import {Provider} from 'react-redux'
+import store from './redux/store'
+import Login from './components/Login'
 
 const App:React.FC = () => {
   return (
     <div>
       <Routes>
-          {/* <Route path="/login" element={<Login/>}/> */}
+          <Route path="/login" element={<Login/>}/>
       </Routes>
     </div>
   );
