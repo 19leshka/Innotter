@@ -5,6 +5,10 @@ const instance = axios.create({
     withCredentials: true
 })
 
+instance.interceptors.response.use(undefined, (error) => {
+    if (error.response && error.response.status === 403) return error.response
+});
+
 export const authAPI = {
     login(email: string, password: string) {
         return instance.post('auth/login/', {email, password});
