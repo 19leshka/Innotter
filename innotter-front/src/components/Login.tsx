@@ -1,16 +1,16 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import {NavLink, useNavigate} from 'react-router-dom'
 import { useFormik, FormikErrors } from 'formik'
 import { useAppDispatch } from '../hooks/useAppDispatch'
 import {loginThunkCreator} from '../redux/reducers/auth-reducer'
+import { useTypedSelector } from "../hooks/useTypedSelector"
 
 import InputAdornment from '@mui/material/InputAdornment'
 import IconButton from '@mui/material/IconButton'
 import Visibility from '@mui/icons-material/Visibility'
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-
-
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
+import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
 
 interface InitialValues {
     email: string,
@@ -35,7 +35,15 @@ const validate = (values: InitialValues) => {
     return errors;
 }
 
-const Login: React.FC = () => {
+
+const Login: React.FC = () => {    
+    const navigate = useNavigate();
+    const isAuth = useTypedSelector(state => state.auth.isAuth);
+
+    useEffect(() => {
+        if(isAuth) navigate(`/`);
+    }, [isAuth])
+    
     const [showPassword, setShowPassword] = useState(false);
     const dispatch = useAppDispatch()
 
@@ -66,49 +74,59 @@ const Login: React.FC = () => {
 
     return (
         <div className='form-container'>
-            <form className='form' onSubmit={formik.handleSubmit}>
-                <TextField
-                    fullWidth
-                    id="email"
-                    name="email"
-                    label="Email"
-                    value={formik.values.email}
-                    onChange={formik.handleChange}
-                    error={formik.touched.email && Boolean(formik.errors.email)}
-                    helperText={formik.touched.email && formik.errors.email}
-                    sx={{
-                        marginBottom: 2
-                    }}
-                />
-                <TextField
-                    fullWidth
-                    id="password"
-                    name="password"
-                    label="Password"
-                    type={showPassword ? 'text' : 'password'}
-                    value={formik.values.password}
-                    onChange={formik.handleChange}
-                    error={formik.touched.password && Boolean(formik.errors.password)}
-                    helperText={formik.touched.password && formik.errors.password}
-                    InputProps={{
-                        endAdornment: <InputAdornment position="end">
-                                        <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={handleClickShowPassword}
-                                        onMouseDown={handleMouseDownPassword}
-                                        >
-                                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                                        </IconButton>
-                                    </InputAdornment>
-                    }}
-                    sx={{
-                        marginBottom: 2
-                    }}
-                />
-                <Button color="primary" variant="contained" fullWidth type="submit">
-                    Login
+            <div className='form'>
+                <form onSubmit={formik.handleSubmit}>
+                    <TextField
+                        fullWidth
+                        id="email"
+                        name="email"
+                        label="Email"
+                        value={formik.values.email}
+                        onChange={formik.handleChange}
+                        error={formik.touched.email && Boolean(formik.errors.email)}
+                        helperText={formik.touched.email && formik.errors.email}
+                        sx={{
+                            marginBottom: 2
+                        }}
+                    />
+                    <TextField
+                        fullWidth
+                        id="password"
+                        name="password"
+                        label="Password"
+                        type={showPassword ? 'text' : 'password'}
+                        value={formik.values.password}
+                        onChange={formik.handleChange}
+                        error={formik.touched.password && Boolean(formik.errors.password)}
+                        helperText={formik.touched.password && formik.errors.password}
+                        InputProps={{
+                            endAdornment: <InputAdornment position="end">
+                                            <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={handleClickShowPassword}
+                                            onMouseDown={handleMouseDownPassword}
+                                            >
+                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                            </IconButton>
+                                        </InputAdornment>
+                        }}
+                        sx={{
+                            marginBottom: 2
+                        }}
+                    />
+                    <Button color="primary" variant="contained" fullWidth type="submit">
+                        Login
+                    </Button>
+                </form>
+            </div>
+            <div className='to-register'>
+                <div>
+                    Not registered yet? 
+                </div>
+                <Button variant="contained" component={NavLink} to="/register">
+                    Register
                 </Button>
-            </form>
+            </div>
         </div>
     )
 }
