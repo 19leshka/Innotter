@@ -6,11 +6,14 @@ const instance = axios.create({
 })
 
 instance.interceptors.response.use(undefined, (error) => {
-    if (error.response && error.response.status === 403) return error.response
+    if (error.response) return error.response
 });
 
 export const authAPI = {
     login(email: string, password: string) {
         return instance.post('auth/login/', {email, password});
+    },
+    register(email: string, username: string, password: string) {
+        return instance.post('auth/register/', {email, username, password});
     }
 }

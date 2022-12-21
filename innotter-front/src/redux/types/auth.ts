@@ -14,9 +14,15 @@ export interface AuthState {
     isAuth: boolean,
 }
 
-export interface FormDataTypes {
+export interface LoginFormDataTypes {
     email: string,
-    password: string
+    password: string,
+}
+
+export interface RegisterFormDataTypes {
+    email: string,
+    username: string,
+    password: string,
 }
 
 interface SetUserDataAction {

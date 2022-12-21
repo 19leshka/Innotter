@@ -58,4 +58,14 @@ export const loginThunkCreator = (formData: LoginFormDataTypes | RegisterFormDat
     }
 }
 
+export const registerThunkCreator = (formData: RegisterFormDataTypes) => async (dispatch: TypedDispatch) => {
+    const response = await authAPI.register(formData.email, formData.username, formData.password);
+    if(response.status === 201) {
+        dispatch(loginThunkCreator(formData));
+    }
+    else if (response.status === 400){
+        dispatch(setLoginErrorActionCreator(response.data.detail))
+    }
+}
+
 export default authReducer;
