@@ -1,6 +1,6 @@
-import {authAPI} from '../../api/api';
-import { TypedDispatch } from '../store';
-import {AuthAction, AuthActionTypes, AuthState, RegisterFormDataTypes, LoginFormDataTypes, SetUserData, SetLoginError} from "../types/auth";
+import {authAPI} from '../../api/api'
+import { TypedDispatch } from '../store'
+import {AuthAction, AuthActionTypes, AuthState, RegisterFormDataTypes, LoginFormDataTypes, SetUserData, SetLoginError} from "../types/auth"
 
 const initialState: AuthState = {
     id: null,
@@ -50,7 +50,7 @@ export const loginThunkCreator = (formData: LoginFormDataTypes | RegisterFormDat
     const response = await authAPI.login(formData.email, formData.password);
     if(response.status === 200) {
         const {id, username, email, image} = response.data.user;
-        const {accessToken} = response.data.access_token;
+        const accessToken = response.data.access_token;
         dispatch(setUserDataActionCreator(id, username, email, image, accessToken, true));
     }
     else if (response.status === 403){
