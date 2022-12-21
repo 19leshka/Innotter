@@ -53,8 +53,8 @@ export const loginThunkCreator = (formData: FormDataTypes) => async (dispatch: T
         const {accessToken} = response.data.access_token;
         dispatch(setUserDataActionCreator(id, username, email, image, accessToken, true));
     }
-    else {
-
+    else if (response.data.resultCode === 403){
+        dispatch(setLoginErrorActionCreator(response.data.detail))
     }
 }
 
