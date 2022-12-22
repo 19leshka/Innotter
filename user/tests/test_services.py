@@ -1,24 +1,13 @@
 from unittest import TestCase
-from unittest.mock import patch
-
 from user.services import UserService
+from user.tests.factories import UserFactory
 
 
-class TestPageServiceMock(TestCase):
-    @patch('tag.services.UserService.block_unblock_switch')
-    def test_put_item(self, mock_block_unblock_switch):
-        test_cases = (
-            {
-                'expected': {'status': 'User is unblocked'},
-                'arguments': 1
-            },
-            {
-                'expected': {'status': 'User is blocked'},
-                'arguments': 1
-            }
-        )
+class TestPageService(TestCase):
+    def test_put_item(self):
+        user1 = UserFactory()
+        result1 = UserService.block_unblock_switch(user1.id)
+        self.assertEqual(result1, {'status': 'User is blocked'})
 
-        for test_case in test_cases:
-            mock_block_unblock_switch.return_value = test_case['expected']
-            result = UserService.block_unblock_switch(test_case['arguments'])
-            self.assertEqual(result, test_case['expected'])
+        result2 = UserService.block_unblock_switch(user1.id)
+        self.assertEqual(result2, {'status': 'User is unblocked'})
