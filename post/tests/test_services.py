@@ -1,25 +1,27 @@
-from unittest import TestCase
-from unittest.mock import patch
+from django.test import RequestFactory, TestCase
 
-import pytest
-
+from post.tests.factories import PostFactory
 from post.services import PostServices
+from user.tests.factories import UserFactory
 
 
-# class TestPageServiceMock(TestCase):
-#     @pytest.mark.django_db
-#     @patch('page.services.PostServices.like_unlike_switch')
-#     def test_put_item(self, mock_like_unlike_switch):
-#         test_cases = (
-#             {
-#                 'expected': {'status': 'You like this post'}
-#             },
-#             {
-#                 'expected': {'status': 'You don\'t like this post anymore'}
-#             },
-#         )
-#
-#         for test_case in test_cases:
-#             mock_like_unlike_switch.return_value = test_case['expected']
-#             result = PostServices.like_unlike_switch({}, {})
-#             self.assertEqual(result, test_case['expected'])
+class TestPostService(TestCase):
+    def setUp(self):
+        self.post1 = PostFactory()
+        self.user1 = UserFactory()
+    def test_put_item(self):
+        test_cases = (
+            {
+                'expected': {'status': 'You like this post'}
+            },
+            {
+                'expected': {'status': 'You don\'t like this post anymore'}
+            },
+        )
+
+        request = RequestFactory().get('/post')
+        request.user = self.user1
+
+        for test_case in test_cases:
+            result = PostServices.like_unlike_switch(self.post1, request)
+            self.assertEqual(result, test_case['expected'])
