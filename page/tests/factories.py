@@ -3,6 +3,7 @@ import factory
 from innotter.utils.tests.base import faker
 
 from page.models import Page
+from user.tests.factories import UserFactory
 
 
 class PageFactory(factory.django.DjangoModelFactory):
@@ -10,4 +11,6 @@ class PageFactory(factory.django.DjangoModelFactory):
         model = Page
 
     name = factory.LazyAttribute(lambda _: faker.name())
-    description = factory.LazyAttribute(lambda _: faker.title())
+    description = factory.LazyAttribute(lambda _: faker.name())
+    owner = factory.SubFactory(UserFactory)
+

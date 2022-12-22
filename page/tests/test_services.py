@@ -1,52 +1,50 @@
-from unittest import TestCase
-from unittest.mock import patch
-
-import pytest
-
+from django.test import RequestFactory, TestCase
 from page.services import PageService
+from page.tests.factories import PageFactory
+from user.tests.factories import UserFactory
 
 
-class TestPageServiceMock(TestCase):
+class TestPageService(TestCase):
+    def setUp(self):
+        self.page1 = PageFactory()
+        self.user1 = UserFactory()
 
-    @pytest.mark.django_db
-    @patch('page.services.PageService.follow_unfollow_switch')
-    def test_put_item(self, mock_follow_unfollow_switch):
+    def test_follow_unfollow(self):
+        request = RequestFactory().get('/pages')
+        request.user = self.user1
+
         test_cases = (
             {
-                'expected': {'status': 'Follow request created'},
-                'pk': 0
-            },
-            {
                 'expected': {'status': 'You follow this page'},
-                'pk': 1
+                'pk': self.page1.pk
             },
             {
                 'expected': {'status': 'You unfollow this page'},
-                'pk': 1
+                'pk': self.page1.pk
             },
         )
 
         for test_case in test_cases:
-            mock_follow_unfollow_switch.return_value = test_case['expected']
-            result = PageService.follow_unfollow_switch(test_case['pk'], {})
+            result = PageService.follow_unfollow_switch(test_case['pk'], request)
             self.assertEqual(result, test_case['expected'])
 
+        self.page1.is_private = True
+        self.page1.save()
+        result = PageService.follow_unfollow_switch(self.page1.pk, request)
+        self.assertEqual(result, {'status': 'Follow request created'})
 
-    @pytest.mark.django_db
-    @patch('page.services.PageService.block_unblock_switch')
-    def test_put_item(self, mock_block_unblock_switch):
+    def test_block_unblock(self):
         test_cases = (
             {
-                'expected': {'status': 'Page is unblocked'},
-                'pk': 1
+                'expected': {'status': 'Page is blocked'},
+                'pk': self.page1.pk
             },
             {
-                'expected': {'status': 'Page is blocked'},
-                'pk': 1
+                'expected': {'status': 'Page is unblocked'},
+                'pk': self.page1.pk
             },
         )
 
         for test_case in test_cases:
-            mock_block_unblock_switch.return_value = test_case['expected']
-            result = PageService.follow_unfollow_switch(test_case['pk'], {})
+            result = PageService.block_unblock_switch(test_case['pk'])
             self.assertEqual(result, test_case['expected'])
