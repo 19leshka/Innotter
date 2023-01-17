@@ -6,6 +6,9 @@ from microservice.services import DynamoDBService
 
 class TestDynamoDBServiceMock(unittest.TestCase):
 
+    def a(self):
+        pass
+
     @patch('microservice.services.DynamoDBService.put_item')
     def test_put_item(self, mock_put_item):
         mock_put_item.return_value = {
